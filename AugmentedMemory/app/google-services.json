@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "295136237048",
+    "firebase_url": "https://augmentedmemory-f0b1a-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "augmentedmemory-f0b1a",
     "storage_bucket": "augmentedmemory-f0b1a.appspot.com"
   },
@@ -22,7 +23,7 @@
           }
         },
         {
-          "client_id": "295136237048-ra4c0tq6831s0l9gd99af3j3acnh69g9.apps.googleusercontent.com",
+          "client_id": "295136237048-f3lep4an2av7tdo3ptbas3ibqhpg50lg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "295136237048-ra4c0tq6831s0l9gd99af3j3acnh69g9.apps.googleusercontent.com",
+              "client_id": "295136237048-f3lep4an2av7tdo3ptbas3ibqhpg50lg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
