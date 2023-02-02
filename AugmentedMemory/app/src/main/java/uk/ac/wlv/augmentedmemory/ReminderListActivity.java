@@ -35,7 +35,7 @@ public class ReminderListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_practice);
+        setContentView(R.layout.activity_reminder_list);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progreesBar1);
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView1);
