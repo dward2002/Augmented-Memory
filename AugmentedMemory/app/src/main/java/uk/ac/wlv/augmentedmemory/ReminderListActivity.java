@@ -3,6 +3,7 @@ package uk.ac.wlv.augmentedmemory;
 import static uk.ac.wlv.augmentedmemory.MainActivity.MESSAGES_CHILD;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,12 +119,12 @@ public class ReminderListActivity extends AppCompatActivity {
 
             @Override
             protected void onBindViewHolder(final MessageViewHolder viewHolder, int position, Reminder Reminder) {
-                /*viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("www",Reminder.getText());
+                        Log.d("www",Reminder.getmTitle());
                     }
-                });*/
+                });
 
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (Reminder.getmTitle() != null) {
