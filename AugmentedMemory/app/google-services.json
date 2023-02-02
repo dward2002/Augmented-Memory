@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "295136237048",
+    "project_id": "augmentedmemory-f0b1a",
+    "storage_bucket": "augmentedmemory-f0b1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295136237048:android:c57aeee1897d4687d6f20d",
+        "android_client_info": {
+          "package_name": "uk.ac.wlv.augmentedmemory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "295136237048-8sg10p93qgj2o51hpfhbivboe0mg0m65.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.ac.wlv.augmentedmemory",
+            "certificate_hash": "f00a3336104532b33a86618d39912c6494af5253"
+          }
+        },
+        {
+          "client_id": "295136237048-ra4c0tq6831s0l9gd99af3j3acnh69g9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyP59h1pQqBgNAQii5_zTF5k1M-UrnjzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "295136237048-ra4c0tq6831s0l9gd99af3j3acnh69g9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
