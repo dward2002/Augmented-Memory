@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mFirebaseDatabaseReference;
-    private ArrayList<ChatMessage> pracList = new ArrayList<>();
+    private ArrayList<Reminder> pracList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,10 +134,10 @@ public class MainActivity extends AppCompatActivity
                 //send messages on click
                 Log.d("www","y0");
                 Log.d("www", String.valueOf(pracList.size()));
-                for(ChatMessage chat : pracList){
+                for(Reminder chat : pracList){
                     Log.d("www",chat.getText());
                 }
-                ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(),
+                Reminder chatMessage = new Reminder(mMessageEditText.getText().toString(),
                         mUserName);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(chatMessage);
                 mMessageEditText.setText("");
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for(DataSnapshot data : snapshot.getChildren()) {
-                            ChatMessage post = data.getValue(ChatMessage.class);
+                            Reminder post = data.getValue(Reminder.class);
                             Log.d("www","inside = "+post.getmTitle());
                             pracList.add(post);
                             //Log.d("www", String.valueOf(pracList.size()));
@@ -181,9 +181,9 @@ public class MainActivity extends AppCompatActivity
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChatMessage chatMessage = new ChatMessage(mResults,
+                Reminder reminder = new Reminder(mResults,
                         mUserName);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(chatMessage);
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(reminder);
             }
         });
 

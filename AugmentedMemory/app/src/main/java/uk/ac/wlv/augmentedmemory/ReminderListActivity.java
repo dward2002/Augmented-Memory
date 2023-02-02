@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ReminderListActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
-    private FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder> mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<Reminder, MessageViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -48,7 +48,7 @@ public class ReminderListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot data : snapshot.getChildren()) {
-                    ChatMessage post = data.getValue(ChatMessage.class);
+                    Reminder post = data.getValue(Reminder.class);
                     //Log.d("www","inside = "+post.getmTitle());
                     //Log.d("www", String.valueOf(pracList.size()));
                     //String post = data.getValue(String.class);
@@ -97,19 +97,19 @@ public class ReminderListActivity extends AppCompatActivity {
 
     private void loadFirebaseMessages() {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        SnapshotParser<ChatMessage> parser = new SnapshotParser<ChatMessage>() {
+        SnapshotParser<Reminder> parser = new SnapshotParser<Reminder>() {
             @Override
-            public ChatMessage parseSnapshot(DataSnapshot dataSnapshot) {
-                ChatMessage ChatMessage = dataSnapshot.getValue(ChatMessage.class);
-                if (ChatMessage != null)
-                    ChatMessage.setId(dataSnapshot.getKey());
-                return ChatMessage;
+            public Reminder parseSnapshot(DataSnapshot dataSnapshot) {
+                Reminder Reminder = dataSnapshot.getValue(Reminder.class);
+                if (Reminder != null)
+                    Reminder.setId(dataSnapshot.getKey());
+                return Reminder;
             }
         };
         DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
-        FirebaseRecyclerOptions<ChatMessage> options =
-                new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(messagesRef, parser).build();
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
+        FirebaseRecyclerOptions<Reminder> options =
+                new FirebaseRecyclerOptions.Builder<Reminder>().setQuery(messagesRef, parser).build();
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Reminder, MessageViewHolder>(options) {
             @Override
             public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
@@ -117,31 +117,31 @@ public class ReminderListActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(final MessageViewHolder viewHolder, int position, ChatMessage ChatMessage) {
+            protected void onBindViewHolder(final MessageViewHolder viewHolder, int position, Reminder Reminder) {
                 /*viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("www",ChatMessage.getText());
+                        Log.d("www",Reminder.getText());
                     }
                 });*/
 
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                if (ChatMessage.getmTitle() != null) {
-                    viewHolder.messageTextView.setText(ChatMessage.getmTitle());
+                if (Reminder.getmTitle() != null) {
+                    viewHolder.messageTextView.setText(Reminder.getmTitle());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
                 }
                 viewHolder.readCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        ChatMessage.setRead(isChecked);
-                        //Log.d("www",ChatMessage.getmTitle());
+                        Reminder.setRead(isChecked);
+                        //Log.d("www",Reminder.getmTitle());
                         FirebaseDatabase.getInstance().getReference()
-                                .child(MESSAGES_CHILD).child(ChatMessage.getId()).child("read")
-                                .setValue(ChatMessage.isRead());
+                                .child(MESSAGES_CHILD).child(Reminder.getId()).child("read")
+                                .setValue(Reminder.isRead());
                     }
                 });
-                viewHolder.messengerTextView.setText(ChatMessage.getName());
-                viewHolder.readCheckbox.setChecked(ChatMessage.isRead());
+                viewHolder.messengerTextView.setText(Reminder.getName());
+                viewHolder.readCheckbox.setChecked(Reminder.isRead());
             }
         };
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

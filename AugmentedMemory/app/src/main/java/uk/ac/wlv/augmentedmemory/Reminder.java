@@ -1,16 +1,16 @@
 package uk.ac.wlv.augmentedmemory;
 
-class ChatMessage {
+class Reminder {
     private String id;
 
     private String mTitle;
     private String name;
     private boolean read;
 
-    public ChatMessage() {
+    public Reminder() {
     }
 
-    public ChatMessage(String mTitle, String name) {
+    public Reminder(String mTitle, String name) {
         this.mTitle = mTitle;
         this.name = name;
     }
