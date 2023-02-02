@@ -113,7 +113,7 @@ public class ReminderListActivity extends AppCompatActivity {
             @Override
             public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                return new MessageViewHolder(inflater.inflate(R.layout.item_message, viewGroup, false));
+                return new MessageViewHolder(inflater.inflate(R.layout.item_reminder, viewGroup, false));
             }
 
             @Override
