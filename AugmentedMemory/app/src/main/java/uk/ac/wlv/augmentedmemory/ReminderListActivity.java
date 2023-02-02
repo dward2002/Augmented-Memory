@@ -3,7 +3,6 @@ package uk.ac.wlv.augmentedmemory;
 import static uk.ac.wlv.augmentedmemory.MainActivity.MESSAGES_CHILD;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class PracticeActivity extends AppCompatActivity {
+public class ReminderListActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
