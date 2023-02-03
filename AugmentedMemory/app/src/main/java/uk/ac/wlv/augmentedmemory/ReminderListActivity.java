@@ -2,6 +2,7 @@ package uk.ac.wlv.augmentedmemory;
 
 import static uk.ac.wlv.augmentedmemory.MainActivity.MESSAGES_CHILD;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -122,7 +123,8 @@ public class ReminderListActivity extends AppCompatActivity {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("www",Reminder.getmTitle());
+                        Intent intent = ReminderActivity.newIntent(ReminderListActivity.this, Reminder.getId());
+                        startActivity(intent);
                     }
                 });
 
