@@ -121,7 +121,7 @@ public class ReminderListActivity extends AppCompatActivity {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = ReminderActivity.newIntent(ReminderListActivity.this, Reminder.getId());
+                        Intent intent = ReminderPagerActivity.newIntent(ReminderListActivity.this, Reminder.getId(),mReminders);
                         startActivity(intent);
                     }
                 });
