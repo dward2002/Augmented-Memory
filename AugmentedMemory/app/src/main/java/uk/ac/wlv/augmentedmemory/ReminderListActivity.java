@@ -27,12 +27,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReminderListActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Reminder, MessageViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
+    private List<Reminder> mReminders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +55,6 @@ public class ReminderListActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot data : snapshot.getChildren()) {
                     Reminder post = data.getValue(Reminder.class);
-                    //Log.d("www","inside = "+post.getmTitle());
-                    //Log.d("www", String.valueOf(pracList.size()));
-                    //String post = data.getValue(String.class);
-                    //String post = data.getKey();
-                    //Log.d("www", post);
-                    //Log.d("www", post.getName());
-                    //Log.d("www", post.getText());
                 }
             }
 
@@ -104,6 +101,7 @@ public class ReminderListActivity extends AppCompatActivity {
             public Reminder parseSnapshot(DataSnapshot dataSnapshot) {
                 Reminder Reminder = dataSnapshot.getValue(Reminder.class);
                 if (Reminder != null)
+                    mReminders.add(Reminder);
                     Reminder.setId(dataSnapshot.getKey());
                 return Reminder;
             }

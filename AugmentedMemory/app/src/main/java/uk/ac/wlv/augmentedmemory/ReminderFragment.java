@@ -51,7 +51,7 @@ public class ReminderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_reminder, container, false);
         mTitleField = (EditText) v.findViewById(R.id.reminder_title);
-        Log.d("www","hiiii");
+        //Log.d("www","hiiii");
         mFirebaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -60,12 +60,12 @@ public class ReminderFragment extends Fragment {
                 }
                 else{
                     mReminder = task.getResult().getValue(Reminder.class);
-                    Log.d("www", mReminder.getmTitle());
+                    //Log.d("www", mReminder.getmTitle());
                     mTitleField.setText(mReminder.getmTitle());
                 }
             }
         });
-        Log.d("www","lol");
+        //Log.d("www","lol");
 
         return v;
     }
