@@ -29,8 +29,8 @@ public class ReminderActivity extends FragmentActivity {
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment == null) {
             String reminderId = (String) getIntent().getSerializableExtra(EXTRA_REMINDER_ID);
-            //fragment = ReminderFragment.newInstance(reminderId);
-            fragment = new ReminderFragment();
+            fragment = ReminderFragment.newInstance(reminderId);
+            //fragment = new ReminderFragment();
             fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
     }
