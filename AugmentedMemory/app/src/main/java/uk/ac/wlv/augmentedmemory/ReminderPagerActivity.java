@@ -18,22 +18,22 @@ import java.util.List;
 import java.util.UUID;
 
 public class ReminderPagerActivity extends AppCompatActivity{
-    private static final String EXTRA_MESSAGE_ID = "uk.ac.wlv.messagesapp.message_id";
+    private static final String EXTRA_REMINDER_ID = "uk.ac.wlv.augmentedmemory.reminder_id";
     private ViewPager mViewPager;
     private List<Reminder> mReminders;
 
-    public static Intent newIntent(Context packageContext, String crimeId){
+    public static Intent newIntent(Context packageContext, String reminderId){
         Intent intent = new Intent(packageContext, ReminderPagerActivity.class);
-        intent.putExtra(EXTRA_MESSAGE_ID, crimeId);
+        intent.putExtra(EXTRA_REMINDER_ID, reminderId);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message_pager);
-        String ReminderId = (String) getIntent().getSerializableExtra((EXTRA_MESSAGE_ID));
-        mViewPager = (ViewPager) findViewById(R.id.activity_message_pager_view_pager);
+        setContentView(R.layout.activity_reminder_pager);
+        String ReminderId = (String) getIntent().getSerializableExtra((EXTRA_REMINDER_ID));
+        mViewPager = (ViewPager) findViewById(R.id.activity_reminder_pager_view_pager);
         //mReminders = MessageLab.get(this).getMessages();
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
