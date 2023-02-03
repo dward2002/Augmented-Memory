@@ -20,11 +20,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.UUID;
+
 public class ReminderFragment extends Fragment {
-    private Reminder mReminder = new Reminder();
+    private static final String ARG_REMINDER_ID= "reminder_id";
+    private Reminder mReminder;
     private EditText mTitleField;
     private String reminderId;
     private DatabaseReference mFirebaseReference;
+
+    public static ReminderFragment newInstance(String reminderId){
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_REMINDER_ID, reminderId);
+        ReminderFragment fragment = new ReminderFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
