@@ -40,7 +40,7 @@ public class ReminderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        reminderId = (String) getActivity().getIntent().getSerializableExtra(ReminderActivity.EXTRA_REMINDER_ID);
+        reminderId = (String) getArguments().getSerializable(ARG_REMINDER_ID);
 
         mFirebaseReference = FirebaseDatabase.getInstance().getReference()
                 .child("messages").child(reminderId);
