@@ -55,6 +55,8 @@ public class ReminderListActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot data : snapshot.getChildren()) {
                     Reminder post = data.getValue(Reminder.class);
+                    post.setId(data.getKey());
+                    mReminders.add(post);
                 }
             }
 
@@ -100,9 +102,10 @@ public class ReminderListActivity extends AppCompatActivity {
             @Override
             public Reminder parseSnapshot(DataSnapshot dataSnapshot) {
                 Reminder Reminder = dataSnapshot.getValue(Reminder.class);
-                if (Reminder != null)
-                    mReminders.add(Reminder);
+                if (Reminder != null) {
+                    //mReminders.add(Reminder);
                     Reminder.setId(dataSnapshot.getKey());
+                }
                 return Reminder;
             }
         };

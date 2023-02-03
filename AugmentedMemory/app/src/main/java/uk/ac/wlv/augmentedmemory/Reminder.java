@@ -1,6 +1,8 @@
 package uk.ac.wlv.augmentedmemory;
 
-class Reminder {
+import java.io.Serializable;
+
+class Reminder implements Serializable {
     private String id;
 
     private String mTitle;

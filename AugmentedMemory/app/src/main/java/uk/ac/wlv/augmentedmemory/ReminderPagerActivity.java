@@ -3,6 +3,7 @@ package uk.ac.wlv.augmentedmemory;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
@@ -14,17 +15,25 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ReminderPagerActivity extends AppCompatActivity{
     private static final String EXTRA_REMINDER_ID = "uk.ac.wlv.augmentedmemory.reminder_id";
+    private static final String EXTRA_REMINDER_LIST = "uk.ac.wlv.augmentedmemory.reminder_list";
     private ViewPager mViewPager;
     private List<Reminder> mReminders;
 
-    public static Intent newIntent(Context packageContext, String reminderId){
+    public static Intent newIntent(Context packageContext, String reminderId, List<Reminder> mReminders){
         Intent intent = new Intent(packageContext, ReminderPagerActivity.class);
-        intent.putExtra(EXTRA_REMINDER_ID, reminderId);
+        Bundle args = new Bundle();
+        args.putString(EXTRA_REMINDER_ID,reminderId);
+        args.putSerializable(EXTRA_REMINDER_LIST, (Serializable) mReminders);
+        intent.putExtra(EXTRA_REMINDER_ID,args);
+        //intent.putExtra(EXTRA_REMINDER_ID, reminderId);
+        //intent.putExtra(EXTRA_REMINDER_LIST, (Serializable) mReminders);
         return intent;
     }
 
@@ -32,9 +41,16 @@ public class ReminderPagerActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_pager);
-        String ReminderId = (String) getIntent().getSerializableExtra((EXTRA_REMINDER_ID));
+        //String ReminderId = (String) getIntent().getSerializableExtra((EXTRA_REMINDER_ID));
+        Bundle args = getIntent().getBundleExtra(EXTRA_REMINDER_ID);
+        String ReminderId = args.getString(EXTRA_REMINDER_ID);
+        mReminders = (ArrayList<Reminder>) args.getSerializable(EXTRA_REMINDER_LIST);
         mViewPager = (ViewPager) findViewById(R.id.activity_reminder_pager_view_pager);
+        for(Reminder rem : mReminders){
+            Log.d("www", "boo"+rem.getId());
+        }
         //mReminders = MessageLab.get(this).getMessages();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
