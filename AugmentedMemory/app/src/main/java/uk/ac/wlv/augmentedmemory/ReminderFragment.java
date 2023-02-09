@@ -38,6 +38,7 @@ public class ReminderFragment extends Fragment {
     private EditText mTitleField;
     Button mDateButton;
     CheckBox mReadCheckBox;
+    Button mDeleteButton;
     private String reminderId;
     private DatabaseReference mFirebaseReference;
 
@@ -111,6 +112,15 @@ public class ReminderFragment extends Fragment {
                 //Log.d("www",Reminder.getmTitle());
                 mFirebaseReference.child("read")
                         .setValue(mReminder1.isRead());
+            }
+        });
+
+        mDeleteButton = (Button) v.findViewById(R.id.delete_button);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFirebaseReference
+                        .removeValue();
             }
         });
 
