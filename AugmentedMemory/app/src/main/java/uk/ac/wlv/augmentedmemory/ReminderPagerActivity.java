@@ -25,6 +25,7 @@ public class ReminderPagerActivity extends AppCompatActivity{
     private static final String EXTRA_REMINDER_LIST = "uk.ac.wlv.augmentedmemory.reminder_list";
     private ViewPager mViewPager;
     private List<Reminder> mReminders;
+    private Reminder mReminder;
 
     public static Intent newIntent(Context packageContext, String reminderId, List<Reminder> mReminders){
         Intent intent = new Intent(packageContext, ReminderPagerActivity.class);
@@ -46,9 +47,7 @@ public class ReminderPagerActivity extends AppCompatActivity{
         String ReminderId = args.getString(EXTRA_REMINDER_ID);
         mReminders = (ArrayList<Reminder>) args.getSerializable(EXTRA_REMINDER_LIST);
         mViewPager = (ViewPager) findViewById(R.id.activity_reminder_pager_view_pager);
-        for(Reminder rem : mReminders){
-            Log.d("www", "boo"+rem.getId());
-        }
+
         //mReminders = MessageLab.get(this).getMessages();
 
         FragmentManager fragmentManager = getSupportFragmentManager();

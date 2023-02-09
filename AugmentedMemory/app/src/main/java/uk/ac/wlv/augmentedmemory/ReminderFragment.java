@@ -70,12 +70,17 @@ public class ReminderFragment extends Fragment {
                     SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
                     Date date = new Date();
                     try {
-                        date = fm.parse("26, MAR 2002");
+                        date = fm.parse("28, FEB 2003");
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    String myString = fm.format(date);
-                    mDateButton.setText(myString);
+                    if(mReminder.getDate() != null) {
+                        mDateButton.setText(mReminder.getDate());
+                    }
+                    else {
+                        String myString = fm.format(date);
+                        mDateButton.setText(myString);
+                    }
                 }
             }
         });
