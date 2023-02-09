@@ -2,6 +2,8 @@ package uk.ac.wlv.augmentedmemory;
 
 import static uk.ac.wlv.augmentedmemory.MainActivity.MESSAGES_CHILD;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +36,8 @@ import java.util.UUID;
 public class ReminderFragment extends Fragment {
     private static final String ARG_REMINDER_ID= "reminder_id";
     private static final String ARG_REMINDER= "reminder";
+    private static final String DIALOG_DATE = "DialogDate";
+    private static final int REQUEST_DATE = 0;
     private Reminder mReminder;
     private Reminder mReminder1;
     private EditText mTitleField;
@@ -87,7 +92,7 @@ public class ReminderFragment extends Fragment {
             }
         });
 
-        mDateButton = (Button) v.findViewById(R.id.reminder_date);
+        /*mDateButton = (Button) v.findViewById(R.id.reminder_date);
 
         SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
         Date date = new Date();
@@ -102,7 +107,30 @@ public class ReminderFragment extends Fragment {
         else {
             String myString = fm.format(date);
             mDateButton.setText(myString);
+        }*/
+        mDateButton = (Button) v.findViewById(R.id.reminder_date);
+        Date date = new Date();
+        if(mReminder1.getDate() != null) {
+            mDateButton.setText(mReminder1.getDate());
+            SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
+            try {
+                date = fm.parse(mReminder1.getDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
+
+        Date finalDate = date;
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(finalDate);
+                dialog.setTargetFragment(ReminderFragment.this, REQUEST_DATE);
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
+
         mReadCheckBox = (CheckBox) v.findViewById(R.id.reminder_read);
         mReadCheckBox.setChecked(mReminder1.isRead());
         mReadCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -123,36 +151,23 @@ public class ReminderFragment extends Fragment {
                         .removeValue();
             }
         });
-
-
-
-        //Log.d("www","hiiii");
-       /* mFirebaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()){
-                    Log.d("www","error");
-                }
-                else{
-                    mReminder = task.getResult().getValue(Reminder.class);
-                    mTitleField.setText(mReminder.getmTitle());
-                    SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
-                    Date date = new Date();
-                    try {
-                        date = fm.parse("28, FEB 2003");
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    if(mReminder.getDate() != null) {
-                        mDateButton.setText(mReminder.getDate());
-                    }
-                    else {
-                        String myString = fm.format(date);
-                        mDateButton.setText(myString);
-                    }
-                }
-            }
-        });*/
         return v;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_DATE) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
+            String myString = fm.format(date);
+            mReminder1.setDate(myString);
+            mDateButton.setText(myString);
+            mFirebaseReference.child("date")
+                    .setValue(mReminder1.getDate());
+        }
+    }
+
 }

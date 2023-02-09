@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Reminder reminder = new Reminder(mResults,
-                        mUserName, "26, MAR 2002");
+                        mUserName, null);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(reminder);
             }
         });
