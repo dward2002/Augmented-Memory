@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -20,12 +21,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class ReminderFragment extends Fragment {
     private static final String ARG_REMINDER_ID= "reminder_id";
     private Reminder mReminder;
     private EditText mTitleField;
+    Button mDateButton;
     private String reminderId;
     private DatabaseReference mFirebaseReference;
 
@@ -51,6 +56,7 @@ public class ReminderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_reminder, container, false);
         mTitleField = (EditText) v.findViewById(R.id.reminder_title);
+        mDateButton = (Button) v.findViewById(R.id.reminder_date);
         //Log.d("www","hiiii");
         mFirebaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -60,13 +66,19 @@ public class ReminderFragment extends Fragment {
                 }
                 else{
                     mReminder = task.getResult().getValue(Reminder.class);
-                    //Log.d("www", mReminder.getmTitle());
                     mTitleField.setText(mReminder.getmTitle());
+                    SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
+                    Date date = new Date();
+                    try {
+                        date = fm.parse("26, MAR 2002");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String myString = fm.format(date);
+                    mDateButton.setText(myString);
                 }
             }
         });
-        //Log.d("www","lol");
-
         return v;
     }
 }

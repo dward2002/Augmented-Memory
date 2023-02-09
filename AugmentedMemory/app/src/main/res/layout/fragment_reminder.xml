@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title" />
+
     <EditText
         android:id="@+id/reminder_title"
         android:layout_width="match_parent"
@@ -11,4 +17,17 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:hint="This is the title" />
+
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Details" />
+
+    <Button
+        android:id="@+id/reminder_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
 </LinearLayout>
