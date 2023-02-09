@@ -53,6 +53,7 @@ public class ReminderListActivity extends AppCompatActivity {
         mFirebaseDeleteReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mReminders.clear();
                 for(DataSnapshot data : snapshot.getChildren()) {
                     Reminder post = data.getValue(Reminder.class);
                     post.setId(data.getKey());

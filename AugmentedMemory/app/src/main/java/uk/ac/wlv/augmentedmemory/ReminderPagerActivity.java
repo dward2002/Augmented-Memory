@@ -55,7 +55,7 @@ public class ReminderPagerActivity extends AppCompatActivity{
             @Override
             public Fragment getItem(int position) {
                 Reminder reminder = mReminders.get(position);
-                return ReminderFragment.newInstance(reminder.getId());
+                return ReminderFragment.newInstance(reminder.getId(), reminder);
             }
 
             @Override
