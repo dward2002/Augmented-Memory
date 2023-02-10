@@ -1,6 +1,9 @@
 package uk.ac.wlv.augmentedmemory;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,6 +14,8 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView mButton;
     private Button mViewButton;
     private Button mSaveButton;
+    private Button mNotifyButton;
     private SpeechRecognizer speechRecognizer;
     boolean clicked = true;
     private String mResults;
@@ -74,6 +80,10 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mFirebaseDatabaseReference;
     private ArrayList<Reminder> pracList = new ArrayList<>();
 
+    //Notification
+    NotificationManagerCompat notificationManagerCompat;
+    Notification notification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         mButton = (ImageView) findViewById(R.id.button);
         mViewButton = (Button) findViewById(R.id.view);
         mSaveButton = (Button) findViewById(R.id.save);
+        mNotifyButton = (Button) findViewById(R.id.notify);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Set default username is anonymous.
@@ -106,78 +117,6 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        /*mMessageEditText = (EditText) findViewById(R.id.messageEditText);
-        mMessageEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
-                    mSendButton.setEnabled(true);
-                } else {
-                    mSendButton.setEnabled(false);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });*/
-
-        /*mSendButton = (Button) findViewById(R.id.sendButton);
-        mSendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //send messages on click
-                Log.d("www","y0");
-                Log.d("www", String.valueOf(pracList.size()));
-                for(Reminder chat : pracList){
-                    Log.d("www",chat.getText());
-                }
-                Reminder chatMessage = new Reminder(mMessageEditText.getText().toString(),
-                        mUserName);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(chatMessage);
-                mMessageEditText.setText("");
-            }
-        });*/
-
-        /*mAddMessageImageView = (ImageView) findViewById(R.id.addMessageImageView);
-        mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pracList.clear();
-                //select image for image on click
-                DatabaseReference mFirebaseDeleteReference = FirebaseDatabase.getInstance().getReference()
-                        .child(MESSAGES_CHILD);
-                mFirebaseDeleteReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot data : snapshot.getChildren()) {
-                            Reminder post = data.getValue(Reminder.class);
-                            Log.d("www","inside = "+post.getmTitle());
-                            pracList.add(post);
-                            //Log.d("www", String.valueOf(pracList.size()));
-                            //String post = data.getValue(String.class);
-                            //String post = data.getKey();
-                            //Log.d("www", post);
-                            //Log.d("www", post.getName());
-                            //Log.d("www", post.getText());
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-                Intent intent = new Intent(MainActivity.this, ReminderListActivity.class);
-                startActivity(intent);
-            }
-        });*/
-
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,6 +135,31 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("myCh","My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
+                .setSmallIcon(android.R.drawable.stat_notify_sync)
+                .setContentTitle("First Notification")
+                .setContentText("This is the body of the message");
+
+        notification = builder.build();
+
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+
+        mNotifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("www","notified");
+                notificationManagerCompat.notify(1,notification);
+            }
+        });
+
+
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO)!=
                 PackageManager.PERMISSION_GRANTED){
