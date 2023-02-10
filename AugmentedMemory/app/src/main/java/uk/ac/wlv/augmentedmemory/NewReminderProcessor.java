@@ -23,10 +23,10 @@ public class NewReminderProcessor {
         DateFormatSymbols dfs = new DateFormatSymbols();
         String[] monthNames = dfs.getMonths(); //January February etc...
         String[] monthNames1 = dfs.getShortMonths(); //Jan Feb etc...
-        Matcher m = Pattern.compile("[0-9]+th").matcher("the 12th of september");//matches 12th
+        Matcher m = Pattern.compile("[0-9]+th").matcher(UnprocessedReminder);//matches 12th
         //Matcher m = p.matcher("the 12th of september");
         if (m.find()) {
-            Matcher m1 = Pattern.compile("[0-9]+").matcher("the 12th of september");//matches 12
+            Matcher m1 = Pattern.compile("[0-9]+").matcher(UnprocessedReminder);//matches 12
             if(m1.find()){
                 Log.d("www",m1.group(0));
                 day = m1.group(0);
