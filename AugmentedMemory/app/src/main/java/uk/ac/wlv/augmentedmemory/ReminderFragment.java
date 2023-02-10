@@ -149,6 +149,7 @@ public class ReminderFragment extends Fragment {
             public void onClick(View view) {
                 mFirebaseReference
                         .removeValue();
+                getActivity().finish();
             }
         });
         return v;
