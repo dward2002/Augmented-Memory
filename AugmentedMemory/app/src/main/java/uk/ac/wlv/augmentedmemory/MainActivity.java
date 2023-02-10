@@ -181,6 +181,8 @@ public class MainActivity extends AppCompatActivity
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                NewReminderProcessor process = new NewReminderProcessor(mResults);
+
                 Reminder reminder = new Reminder(mResults,
                         mUserName, null);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(reminder);
