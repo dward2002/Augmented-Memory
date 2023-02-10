@@ -92,22 +92,14 @@ public class ReminderFragment extends Fragment {
             }
         });
 
-        /*mDateButton = (Button) v.findViewById(R.id.reminder_date);
-
-        SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
-        Date date = new Date();
+        /*SimpleDateFormat fm1 = new SimpleDateFormat("dd, MMM yyyy HH:mm");
+        Date doodle = new Date();
         try {
-            date = fm.parse("28, FEB 2003");
+            doodle = fm1.parse("23, MAR 2010 16:32");
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if(mReminder1.getDate() != null) {
-            mDateButton.setText(mReminder1.getDate());
-        }
-        else {
-            String myString = fm.format(date);
-            mDateButton.setText(myString);
-        }*/
+        Log.d("www", String.valueOf(doodle));*/
         mDateButton = (Button) v.findViewById(R.id.reminder_date);
         Date date = new Date();
         if(mReminder1.getDate() != null) {
