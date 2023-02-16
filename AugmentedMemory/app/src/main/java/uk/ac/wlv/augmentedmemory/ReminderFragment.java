@@ -3,7 +3,13 @@ package uk.ac.wlv.augmentedmemory;
 import static uk.ac.wlv.augmentedmemory.MainActivity.MESSAGES_CHILD;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +21,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -38,6 +47,7 @@ public class ReminderFragment extends Fragment {
     private static final String ARG_REMINDER= "reminder";
     private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
+
     private Reminder mReminder;
     private Reminder mReminder1;
     private EditText mTitleField;
@@ -46,6 +56,15 @@ public class ReminderFragment extends Fragment {
     Button mDeleteButton;
     private String reminderId;
     private DatabaseReference mFirebaseReference;
+
+    private Button mSelectTimeBtn;
+    private Button mSetAlarmBtn;
+    private Button mCancelAlarmBtn;
+    private TextView mSelectedTime;
+
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    private Calendar calendar;
 
     public static ReminderFragment newInstance(String reminderId, Reminder rem){
         Bundle args = new Bundle();
@@ -70,6 +89,9 @@ public class ReminderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_reminder, container, false);
+
+        createNotificationChannel();
+
         mTitleField = (EditText) v.findViewById(R.id.reminder_title);
         mTitleField.setText(mReminder1.getmTitle());
 
@@ -144,7 +166,98 @@ public class ReminderFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        mSelectTimeBtn = (Button) v.findViewById(R.id.selectTimeBtn);
+        mSelectTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("www","mSelectTimeBtn");
+                showTimePicker();
+            }
+        });
+
+        mSetAlarmBtn = (Button) v.findViewById(R.id.setAlarmBtn);
+        mSetAlarmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("www","mSetAlarmBtn");
+                setAlarm();
+            }
+        });
+
+        mCancelAlarmBtn = (Button) v.findViewById(R.id.cancelAlarmBtn);
+        mCancelAlarmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("www","mCancelAlarmBtn");
+                cancelAlarm();
+            }
+        });
+        mSelectedTime = (TextView) v.findViewById(R.id.selectedTime);
+
         return v;
+    }
+
+    private void showTimePicker(){
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,12);
+        calendar.set(Calendar.MINUTE,13);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy");
+        Log.d("www",dateFormat.format(calendar.getTimeInMillis()));
+        mSelectedTime.setText(dateFormat.format(calendar.getTimeInMillis()));
+    }
+
+    private void setAlarm() {
+
+        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+
+        pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
+        //       AlarmManager.INTERVAL_DAY,pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
+        //Calendar cal = calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss 'GMT'Z yyyy");
+        Log.d("www",dateFormat.format(calendar.getTimeInMillis()));
+
+
+
+        Toast.makeText(getActivity(),"Alarm set Successfully",Toast.LENGTH_LONG).show();
+
+    }
+
+    private void cancelAlarm() {
+
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+
+        pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+
+        if(alarmManager == null){
+            alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        }
+
+        alarmManager.cancel(pendingIntent);
+
+        Toast.makeText(getActivity(), "Alarm Cancelled", Toast.LENGTH_LONG).show();
+
+    }
+
+    private void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "foxandroidReminderChannel";
+            String description = "Channel For Alarm Manager";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("foxandroid",name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
