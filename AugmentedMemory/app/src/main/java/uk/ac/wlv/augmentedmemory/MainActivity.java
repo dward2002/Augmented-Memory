@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mFirebaseDatabaseReference;
     private ArrayList<Reminder> pracList = new ArrayList<>();
 
-    //Notification
-    NotificationManagerCompat notificationManagerCompat;
-    Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         mButton = (ImageView) findViewById(R.id.button);
         mViewButton = (Button) findViewById(R.id.view);
         mSaveButton = (Button) findViewById(R.id.save);
-        mNotifyButton = (Button) findViewById(R.id.notify);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Set default username is anonymous.
@@ -135,31 +131,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel("myCh","My Channel", NotificationManager.IMPORTANCE_DEFAULT);
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
-                .setSmallIcon(android.R.drawable.stat_notify_sync)
-                .setContentTitle("First Notification")
-                .setContentText("This is the body of the message");
-
-        notification = builder.build();
-
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-
-        mNotifyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("www","notified");
-                notificationManagerCompat.notify(1,notification);
-            }
-        });
-
-
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO)!=
                 PackageManager.PERMISSION_GRANTED){
