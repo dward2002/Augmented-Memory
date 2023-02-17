@@ -256,10 +256,9 @@ public class ReminderFragment extends Fragment {
     }
 
     private void cancelAlarm() {
-
         Intent intent = new Intent(getActivity(), AlarmReceiver.class);
-
-        pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+        int requestCode = mReminder1.getRequestCode();
+        pendingIntent = PendingIntent.getBroadcast(getActivity(),requestCode,intent,FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
 
         if(alarmManager == null){
             alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
