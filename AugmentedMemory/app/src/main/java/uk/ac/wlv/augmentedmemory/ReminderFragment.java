@@ -232,12 +232,14 @@ public class ReminderFragment extends Fragment {
         Intent intent = new Intent(getActivity(), AlarmReceiver.class);
         Bundle bundle1 = new Bundle();
         String title = mReminder1.getmTitle();
+        int requestCode = mReminder1.getRequestCode();
         Log.d("www",title);
         bundle1.putString(ARG_REMINDER,title);
+        bundle1.putInt("reminder1",requestCode);
         intent.putExtras(bundle1);
 
 
-        pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent, FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
+        pendingIntent = PendingIntent.getBroadcast(getActivity(),requestCode,intent, FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
 
         //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
         //       AlarmManager.INTERVAL_DAY,pendingIntent);

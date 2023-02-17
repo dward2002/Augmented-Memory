@@ -16,10 +16,12 @@ public class AlarmReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         Bundle bundle1 = intent.getExtras();
         String title = bundle1.getString(ARG_REMINDER);
+        int requestCode = bundle1.getInt("reminder1");
         Log.d("www", String.valueOf(title));
+        Log.d("www", String.valueOf(requestCode));
         Intent i = new Intent(context,DestinationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,i,Intent.FILL_IN_DATA);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,requestCode,i,Intent.FILL_IN_DATA);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"foxandroid")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)

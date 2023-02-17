@@ -39,10 +39,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mFirebaseDatabaseReference;
     private ArrayList<Reminder> pracList = new ArrayList<>();
+    private List<Reminder> mReminders = new ArrayList<>();
 
 
     @Override
@@ -113,13 +118,34 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
+        DatabaseReference mFirebaseDeleteReference = FirebaseDatabase.getInstance().getReference()
+                .child(MESSAGES_CHILD);
+        mFirebaseDeleteReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mReminders.clear();
+                for(DataSnapshot data : snapshot.getChildren()) {
+                    Reminder post = data.getValue(Reminder.class);
+                    post.setId(data.getKey());
+                    mReminders.add(post);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NewReminderProcessor process = new NewReminderProcessor(mResults);
-
+                int requestCode = requestCheck();
                 Reminder reminder = new Reminder(mResults,
-                        mUserName, null);
+                        mUserName, null,requestCode);
+                requestCheck();
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(reminder);
             }
         });
@@ -234,6 +260,16 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this,"Permission granted", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private int requestCheck(){
+        int highest = 0;
+        for(Reminder reminder : mReminders){
+            if(reminder.getRequestCode() > highest){
+                highest = reminder.getRequestCode();
+            }
+        }
+        return highest + 1;
     }
 
     @Override

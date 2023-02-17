@@ -15,6 +15,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,8 @@ public class ReminderPagerActivity extends AppCompatActivity{
     private ViewPager mViewPager;
     private List<Reminder> mReminders;
     private Reminder mReminder;
+
+    private DatabaseReference mFirebaseReference;
 
     public static Intent newIntent(Context packageContext, String reminderId, List<Reminder> mReminders){
         Intent intent = new Intent(packageContext, ReminderPagerActivity.class);
@@ -47,6 +52,10 @@ public class ReminderPagerActivity extends AppCompatActivity{
         String ReminderId = args.getString(EXTRA_REMINDER_ID);
         mReminders = (ArrayList<Reminder>) args.getSerializable(EXTRA_REMINDER_LIST);
         mViewPager = (ViewPager) findViewById(R.id.activity_reminder_pager_view_pager);
+
+        mFirebaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("messages");
+
 
         //mReminders = MessageLab.get(this).getMessages();
 

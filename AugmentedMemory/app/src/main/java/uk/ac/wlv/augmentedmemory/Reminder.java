@@ -10,14 +10,16 @@ class Reminder implements Serializable {
     private String name;
     private boolean read;
     private String date;
+    private int requestCode;
 
     public Reminder() {
     }
 
-    public Reminder(String mTitle, String name, String date) {
+    public Reminder(String mTitle, String name, String date, int requestCode) {
         this.mTitle = mTitle;
         this.name = name;
         this.date = date;
+        this.requestCode = requestCode;
     }
 
     public String getId() {
@@ -47,4 +49,8 @@ class Reminder implements Serializable {
     public String getDate() {return date;}
 
     public void setDate(String date) {this.date = date;}
+
+    public int getRequestCode() {return requestCode;}
+
+    public void setRequestCode(int requestCode) {this.requestCode = requestCode;}
 }
