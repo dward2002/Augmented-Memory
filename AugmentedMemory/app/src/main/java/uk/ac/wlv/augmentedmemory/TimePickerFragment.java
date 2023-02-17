@@ -17,16 +17,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DatePickerFragment extends DialogFragment{
+public class TimePickerFragment extends DialogFragment{
     public static final String EXTRA_DATE = "uk.ac.wlv.augmentedmemory.date";
     private static final String ARG_DATE = "date";
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
 
-    public static DatePickerFragment newInstance(Date date){
+    public static TimePickerFragment newInstance(Date date){
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATE, date);
-        DatePickerFragment fragment = new DatePickerFragment();
+        TimePickerFragment fragment = new TimePickerFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,9 +44,10 @@ public class DatePickerFragment extends DialogFragment{
         int minute = calendar.get(Calendar.MINUTE);
         int second = calendar.get(Calendar.SECOND);
 
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_date, null);
-        mDatePicker = (DatePicker) v.findViewById(R.id.dialog_date_picker);
-        mDatePicker.init(year, month, day, null);
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time, null);
+        mTimePicker = (TimePicker) v.findViewById(R.id.dialog_time_picker);
+        mTimePicker.setHour(hour);
+        mTimePicker.setMinute(minute);
 
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
@@ -55,9 +56,8 @@ public class DatePickerFragment extends DialogFragment{
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                int year = mDatePicker.getYear();
-                                int month = mDatePicker.getMonth();
-                                int day = mDatePicker.getDayOfMonth();
+                                int hour = mTimePicker.getHour();
+                                int minute = mTimePicker.getMinute();
                                 Date date = new GregorianCalendar(year, month, day, hour, minute).getTime();
                                 sendResult(Activity.RESULT_OK, date);
                             }

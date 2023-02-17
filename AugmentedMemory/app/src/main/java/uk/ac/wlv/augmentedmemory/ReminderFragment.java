@@ -1,5 +1,6 @@
 package uk.ac.wlv.augmentedmemory;
 
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static uk.ac.wlv.augmentedmemory.MainActivity.MESSAGES_CHILD;
 
 import android.app.Activity;
@@ -52,10 +53,12 @@ public class ReminderFragment extends Fragment {
     private Reminder mReminder1;
     private EditText mTitleField;
     Button mDateButton;
+    Button mTimeButton;
     CheckBox mReadCheckBox;
     Button mDeleteButton;
     private String reminderId;
     private DatabaseReference mFirebaseReference;
+    private Date mDate;
 
     private Button mSelectTimeBtn;
     private Button mSetAlarmBtn;
@@ -123,23 +126,35 @@ public class ReminderFragment extends Fragment {
         }
         Log.d("www", String.valueOf(doodle));*/
         mDateButton = (Button) v.findViewById(R.id.reminder_date);
-        Date date = new Date();
+        mDate = new Date();
         if(mReminder1.getDate() != null) {
             mDateButton.setText(mReminder1.getDate());
-            SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
+            SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
             try {
-                date = fm.parse(mReminder1.getDate());
+                mDate = fm.parse(mReminder1.getDate());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
 
-        Date finalDate = date;
+        //Date finalDate = mDate;
+        Log.d("www","this "+ String.valueOf(mDate));
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();
-                DatePickerFragment dialog = DatePickerFragment.newInstance(finalDate);
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mDate);
+                dialog.setTargetFragment(ReminderFragment.this, REQUEST_DATE);
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
+
+        mTimeButton = (Button) v.findViewById(R.id.reminder_time);
+        mTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mDate);
                 dialog.setTargetFragment(ReminderFragment.this, REQUEST_DATE);
                 dialog.show(manager, DIALOG_DATE);
             }
@@ -200,8 +215,9 @@ public class ReminderFragment extends Fragment {
 
     private void showTimePicker(){
         calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,12);
-        calendar.set(Calendar.MINUTE,13);
+        calendar.setTime(mDate);
+        //calendar.set(Calendar.HOUR_OF_DAY,06);
+        //calendar.set(Calendar.MINUTE,18);
         calendar.set(Calendar.SECOND,0);
         calendar.set(Calendar.MILLISECOND,0);
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy");
@@ -214,8 +230,14 @@ public class ReminderFragment extends Fragment {
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+        Bundle bundle1 = new Bundle();
+        String title = mReminder1.getmTitle();
+        Log.d("www",title);
+        bundle1.putString(ARG_REMINDER,title);
+        intent.putExtras(bundle1);
 
-        pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+
+        pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent, FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
 
         //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
         //       AlarmManager.INTERVAL_DAY,pendingIntent);
@@ -267,10 +289,15 @@ public class ReminderFragment extends Fragment {
         }
         if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy");
+            SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
+            SimpleDateFormat fm1 = new SimpleDateFormat("HH, mm");
             String myString = fm.format(date);
+            String myString1 = fm1.format(date);
+            mDate = date;
+            Log.d("www","return "+mDate);
             mReminder1.setDate(myString);
             mDateButton.setText(myString);
+            mTimeButton.setText(myString1);
             mFirebaseReference.child("date")
                     .setValue(mReminder1.getDate());
         }
