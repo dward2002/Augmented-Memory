@@ -1,9 +1,14 @@
 package uk.ac.wlv.augmentedmemory;
 
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -45,7 +50,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -84,6 +92,12 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mFirebaseDatabaseReference;
     private ArrayList<Reminder> pracList = new ArrayList<>();
     private List<Reminder> mReminders = new ArrayList<>();
+
+    private static final String ARG_REMINDER= "reminder";
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    private Calendar calendar;
+    private Reminder mReminder1;
 
 
     @Override
@@ -137,16 +151,23 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        createNotificationChannel();
+
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NewReminderProcessor process = new NewReminderProcessor(mResults);
                 int requestCode = requestCheck();
-                Reminder reminder = new Reminder(mResults,
-                        mUserName, null,requestCode);
-                requestCheck();
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(reminder);
+                Date date = new Date();
+                SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
+                date.setTime(date.getTime() + 3600000);
+                String myDateString = fm.format(date);
+                mReminder1 = new Reminder(mResults,
+                        mUserName, myDateString,requestCode);
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
+                showTimePicker(date);
+                setAlarm();
             }
         });
 
@@ -270,6 +291,59 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return highest + 1;
+    }
+
+    private void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "AugmemoryReminderChannel";
+            String description = "Channel For Notifications";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("Augmemory",name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = MainActivity.this.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showTimePicker(Date date){
+        calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        //calendar.set(Calendar.HOUR_OF_DAY,06);
+        //calendar.set(Calendar.MINUTE,18);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy");
+    }
+
+    private void setAlarm() {
+
+        alarmManager = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        Bundle bundle1 = new Bundle();
+        String title = mReminder1.getmTitle();
+        int requestCode = mReminder1.getRequestCode();
+        Log.d("www",title);
+        bundle1.putString(ARG_REMINDER,title);
+        bundle1.putInt("reminder1",requestCode);
+        intent.putExtras(bundle1);
+
+
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this,requestCode,intent, FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
+
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),
+        //       AlarmManager.INTERVAL_DAY,pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
+        //Calendar cal = calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss 'GMT'Z yyyy");
+        Log.d("www",dateFormat.format(calendar.getTimeInMillis()));
+
+
+
+        Toast.makeText(MainActivity.this,"Alarm set Successfully",Toast.LENGTH_LONG).show();
+
     }
 
     @Override

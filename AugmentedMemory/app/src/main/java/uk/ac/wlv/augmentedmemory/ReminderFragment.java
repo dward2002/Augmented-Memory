@@ -272,10 +272,10 @@ public class ReminderFragment extends Fragment {
 
     private void createNotificationChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "foxandroidReminderChannel";
-            String description = "Channel For Alarm Manager";
+            CharSequence name = "AugmemoryReminderChannel";
+            String description = "Channel For Notifications";
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("foxandroid",name,importance);
+            NotificationChannel channel = new NotificationChannel("Augmemory",name,importance);
             channel.setDescription(description);
 
             NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);

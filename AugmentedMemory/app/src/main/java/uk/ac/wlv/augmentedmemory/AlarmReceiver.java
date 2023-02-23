@@ -23,7 +23,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,requestCode,i,Intent.FILL_IN_DATA);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"foxandroid")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"Augmemory")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("Augmented Memory")
                 .setContentText(title)
