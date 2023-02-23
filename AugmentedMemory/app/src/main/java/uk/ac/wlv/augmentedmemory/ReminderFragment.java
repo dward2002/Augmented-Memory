@@ -176,6 +176,7 @@ public class ReminderFragment extends Fragment {
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cancelAlarm();
                 mFirebaseReference
                         .removeValue();
                 getActivity().finish();
