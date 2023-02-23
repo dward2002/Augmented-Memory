@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 NewReminderProcessor process = new NewReminderProcessor(mResults);
+                process.process();
                 int requestCode = requestCheck();
                 Date date = new Date();
                 SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
@@ -338,7 +339,7 @@ public class MainActivity extends AppCompatActivity
 
         //Calendar cal = calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss 'GMT'Z yyyy");
-        Log.d("www",dateFormat.format(calendar.getTimeInMillis()));
+        //Log.d("www",dateFormat.format(calendar.getTimeInMillis()));
 
 
 
