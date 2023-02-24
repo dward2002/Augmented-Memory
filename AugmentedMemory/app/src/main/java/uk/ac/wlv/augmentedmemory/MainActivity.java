@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView mButton;
     private Button mViewButton;
     private Button mSaveButton;
+    private Button mMapsButton;
     private Button mNotifyButton;
     private SpeechRecognizer speechRecognizer;
     boolean clicked = true;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity
         mButton = (ImageView) findViewById(R.id.button);
         mViewButton = (Button) findViewById(R.id.view);
         mSaveButton = (Button) findViewById(R.id.save);
+        mMapsButton = (Button) findViewById(R.id.maps);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Set default username is anonymous.
@@ -181,6 +183,14 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ReminderListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mMapsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(intent);
             }
         });
