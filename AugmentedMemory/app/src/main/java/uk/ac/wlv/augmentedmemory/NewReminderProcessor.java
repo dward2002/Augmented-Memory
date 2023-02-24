@@ -15,16 +15,18 @@ public class NewReminderProcessor {
     private String UnprocessedReminder;
     private String day;
     private String month;
+    private String time;
 
     public NewReminderProcessor(String UnprocessedReminder) {
         this.UnprocessedReminder = UnprocessedReminder;
     }
 
-    public void process(){
+    public String dateTimeprocess(){
         dayProcess();
         monthProcess();
         timeProcess();
-        DateCombine();
+        String dateTime = DateCombine();
+        return dateTime;
     }
 
     private void dayProcess(){
@@ -33,7 +35,7 @@ public class NewReminderProcessor {
         if (m.find()) {
             Matcher m1 = Pattern.compile("[0-9]+").matcher(m.group(0));//matches 12
             if(m1.find()){
-                Log.d("www","th "+m1.group(0));
+                //Log.d("www","th "+m1.group(0));
                 day = m1.group(0);
             }
         }
@@ -43,7 +45,7 @@ public class NewReminderProcessor {
             if (m.find()) {
                 Matcher m1 = Pattern.compile("[0-9]+").matcher(m.group(0));//matches 12
                 if(m1.find()){
-                    Log.d("www","nd "+m1.group(0));
+                    //Log.d("www","nd "+m1.group(0));
                     day = m1.group(0);
                 }
             }
@@ -53,7 +55,7 @@ public class NewReminderProcessor {
                 if (m.find()) {
                     Matcher m1 = Pattern.compile("[0-9]+").matcher(m.group(0));//matches 12
                     if(m1.find()){
-                        Log.d("www","rd "+m1.group(0));
+                        //Log.d("www","rd "+m1.group(0));
                         day = m1.group(0);
                     }
                 }
@@ -63,12 +65,19 @@ public class NewReminderProcessor {
                     if (m.find()) {
                         Matcher m1 = Pattern.compile("[0-9]+").matcher(m.group(0));//matches 12
                         if(m1.find()){
-                            Log.d("www","st "+m1.group(0));
+                            //Log.d("www","st "+m1.group(0));
                             day = m1.group(0);
                         }
                     }
                 }
             }
+        }
+        //if no day is found default to today's date
+        if(this.day == null){
+            //if it can't find a month default to the current month
+            Date date = new Date();
+            SimpleDateFormat fm = new SimpleDateFormat("dd");
+            this.day = fm.format(date);
         }
     }
 
@@ -80,10 +89,18 @@ public class NewReminderProcessor {
         int count = 0;
         for(String month: monthNames){
             if (UnprocessedReminder.contains(month) || UnprocessedReminder.contains(monthNames1[count])){
-                Log.d("www",monthNames1[count]);
                 this.month = monthNames1[count].toUpperCase();
             }
             count++;
+        }
+        //if no month is found
+        Log.d("WWW","out "+this.month);
+        if(this.month == null){
+            //if it can't find a month default to the current month
+            Date date = new Date();
+            SimpleDateFormat fm = new SimpleDateFormat("MMM");
+            this.month = fm.format(date);
+            Log.d("WWW","in "+this.month);
         }
     }
 
@@ -114,7 +131,6 @@ public class NewReminderProcessor {
                 }
                 //pm but doesnt have : minutes (example 7 p.m)
                 else{
-                    Log.d("www","dan "+time);
                     //gets the first 2 digits so '7 ' or '11'
                     time = time.substring(0, 2);
                     //gets the second character
@@ -169,7 +185,6 @@ public class NewReminderProcessor {
 
                 //not pm but doesnt have : minutes (example 7)
                 else{
-                    Log.d("www","dan "+time);
                     //gets the first 2 digits so '7 ' or '11' for example
                     time = time.substring(0, 2);
                     //gets the second character
@@ -193,13 +208,21 @@ public class NewReminderProcessor {
 
             }
             Log.d("www",time);
+            this.time = time;
+        }
+        else {
+            //if it can't find a time default to 1 hour in the future
+            Date date = new Date();
+            SimpleDateFormat fm = new SimpleDateFormat("HH mm");
+            date.setTime(date.getTime() + 3600000);
+            this.time = fm.format(date);
         }
     }
 
-    private void DateCombine(){
-        String strDate = day+", "+month+" "+"2023";
+    private String DateCombine(){
+        String strDate = day+", "+month+" "+"2023, "+time;
         Log.d("www",strDate);
-        SimpleDateFormat fm1 = new SimpleDateFormat("dd, MMM yyyy");
+        SimpleDateFormat fm1 = new SimpleDateFormat("dd, MMM yyyy, HH mm");
         Date doodle = new Date();
         try {
             doodle = fm1.parse(strDate);
@@ -207,5 +230,6 @@ public class NewReminderProcessor {
             e.printStackTrace();
         }
         Log.d("www", String.valueOf(doodle));
+        return strDate;
     }
 }

@@ -50,6 +50,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -157,15 +158,19 @@ public class MainActivity extends AppCompatActivity
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewReminderProcessor process = new NewReminderProcessor(mResults);
-                process.process();
+                NewReminderProcessor process;
+                process = new NewReminderProcessor(mResults);
+                String dateTime = process.dateTimeprocess();
                 int requestCode = requestCheck();
                 Date date = new Date();
                 SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
-                date.setTime(date.getTime() + 3600000);
-                String myDateString = fm.format(date);
+                try {
+                    date = fm.parse(dateTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 mReminder1 = new Reminder(mResults,
-                        mUserName, myDateString,requestCode);
+                        mUserName, dateTime,requestCode);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
                 showTimePicker(date);
                 setAlarm();
