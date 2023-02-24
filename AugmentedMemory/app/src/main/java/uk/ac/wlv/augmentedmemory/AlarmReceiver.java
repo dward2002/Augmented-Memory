@@ -19,7 +19,8 @@ public class AlarmReceiver extends BroadcastReceiver{
         int requestCode = bundle1.getInt("reminder1");
         Log.d("www", String.valueOf(title));
         Log.d("www", String.valueOf(requestCode));
-        Intent i = new Intent(context,DestinationActivity.class);
+        //Intent i = new Intent(context,DestinationActivity.class);
+        Intent i = new Intent(context,MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,requestCode,i,Intent.FILL_IN_DATA);
 
