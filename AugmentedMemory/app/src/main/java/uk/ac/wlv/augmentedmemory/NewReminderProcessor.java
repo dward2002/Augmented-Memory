@@ -7,7 +7,10 @@ import android.util.Log;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +30,11 @@ public class NewReminderProcessor {
         timeProcess();
         String dateTime = DateCombine();
         return dateTime;
+    }
+
+    public String getLocationProcess(){
+        String location = locationProcess();
+        return location;
     }
 
     private void dayProcess(){
@@ -204,6 +212,18 @@ public class NewReminderProcessor {
                     }
                     //give time the minutes which will always be 00
                     time = time +" "+"00";
+                    char charArray[] = time.toCharArray();
+                    boolean bool = Character.isDigit(charArray[0]);
+                    Log.d("www","yeeeeee");
+                    if(!bool) {
+                        Log.d("www","hoooooo");
+                        //if it can't find a time default to 1 hour in the future
+                        Date date = new Date();
+                        SimpleDateFormat fm = new SimpleDateFormat("HH mm");
+                        date.setTime(date.getTime() + 3600000);
+                        time = fm.format(date);
+                        this.time = fm.format(date);
+                    }
                 }
 
             }
@@ -217,6 +237,35 @@ public class NewReminderProcessor {
             date.setTime(date.getTime() + 3600000);
             this.time = fm.format(date);
         }
+    }
+
+    private String locationProcess(){
+        Matcher m = Pattern.compile("at location.*$").matcher(UnprocessedReminder);//finds 'at location' and words after
+        //List<String> words = new ArrayList<>();
+        String location = "";
+
+        if (m.find()) {
+            m.group(0);
+            String sentence = m.group(0);
+            String[] words = sentence.split(" ");
+            for(int i = 2; i < words.length; i++){
+                if(i == 2){
+                    location = location + words[i];
+                }
+                else{
+                    location = location+ " " + words[i];
+                }
+
+            }
+
+        }
+        if(location == ""){
+            return null;
+        }
+        else{
+            return location;
+        }
+
     }
 
     private String DateCombine(){

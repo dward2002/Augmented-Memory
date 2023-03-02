@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity
                 NewReminderProcessor process;
                 process = new NewReminderProcessor(mResults);
                 String dateTime = process.dateTimeprocess();
+                String location = process.getLocationProcess();
                 int requestCode = requestCheck();
                 Date date = new Date();
                 SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 mReminder1 = new Reminder(mResults,
-                        mUserName, dateTime,requestCode);
+                        mUserName, dateTime,requestCode, location);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
                 showTimePicker(date);
                 setAlarm();
@@ -190,8 +191,10 @@ public class MainActivity extends AppCompatActivity
         mMapsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                Intent intent = MapsActivity.newIntent(MainActivity.this, mReminders);
                 startActivity(intent);
+                //Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                //startActivity(intent);
             }
         });
 
