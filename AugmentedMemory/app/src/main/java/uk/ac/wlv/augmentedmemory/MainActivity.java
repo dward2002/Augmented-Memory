@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
     private Reminder mReminder1;
     private String emailFound;
     private String account;
+    private String email;
 
 
     @Override
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity
 
         DatabaseReference mFirebaseUserReference = FirebaseDatabase.getInstance().getReference()
                 .child(USERS_CHILD);
-        String email = mFirebaseUser.getEmail();
+        email = mFirebaseUser.getEmail();
         String monitoredAccount = null;
         if (email.equals("doogieboy111@gmail.com")){
             account = "user";
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 mReminder1 = new Reminder(mResults,
-                        mUserName, dateTime,requestCode, location);
+                        mUserName, dateTime,requestCode, location, email);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
                 showTimePicker(date);
                 setAlarm();
@@ -348,6 +349,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MainActivity.this, MonitorActivity.class);
+                    intent.putExtra("username", "doogieboy111@gmail.com");
                     startActivity(intent);
                 }
             });

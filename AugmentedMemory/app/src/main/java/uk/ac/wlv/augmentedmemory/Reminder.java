@@ -12,16 +12,18 @@ class Reminder implements Serializable {
     private String date;
     private int requestCode;
     private String Location;
+    private String email;
 
     public Reminder() {
     }
 
-    public Reminder(String mTitle, String name, String date, int requestCode, String Location) {
+    public Reminder(String mTitle, String name, String date, int requestCode, String Location,String email) {
         this.mTitle = mTitle;
         this.name = name;
         this.date = date;
         this.requestCode = requestCode;
         this.Location = Location;
+        this.email = email;
     }
 
     public String getId() {
@@ -59,4 +61,12 @@ class Reminder implements Serializable {
     public String getLocation(){return Location;}
 
     public void setLocation(String Location){this.Location = Location;}
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
