@@ -48,6 +48,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
+    public static final String USERS_CHILD = "users";
     private static final int REQUEST_INVITE = 1;
     private static final int REQUEST_IMAGE = 2;
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity
     private Button mSaveButton;
     private Button mMapsButton;
     private Button mNotifyButton;
+    private Button mMonitorButton;
     private SpeechRecognizer speechRecognizer;
     boolean clicked = true;
     private String mResults;
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity
     private PendingIntent pendingIntent;
     private Calendar calendar;
     private Reminder mReminder1;
+    private String emailFound;
+    private String account;
 
 
     @Override
@@ -112,6 +117,7 @@ public class MainActivity extends AppCompatActivity
         mViewButton = (Button) findViewById(R.id.view);
         mSaveButton = (Button) findViewById(R.id.save);
         mMapsButton = (Button) findViewById(R.id.maps);
+        mMonitorButton = (Button) findViewById(R.id.monitorButton);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Set default username is anonymous.
@@ -135,6 +141,49 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
+        DatabaseReference mFirebaseUserReference = FirebaseDatabase.getInstance().getReference()
+                .child(USERS_CHILD);
+        String email = mFirebaseUser.getEmail();
+        String monitoredAccount = null;
+        if (email.equals("doogieboy111@gmail.com")){
+            account = "user";
+        }
+        else{
+            account = "monitor";
+            monitoredAccount = "doogieboy111@gmail.com";
+        }
+        final String monitoredAccount1 = monitoredAccount;
+
+        Log.d("www",email);
+
+        emailFound = "false";
+
+        mFirebaseUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot data : snapshot.getChildren()) {
+                    User user = data.getValue(User.class);
+                    //user.setId(data.getKey());
+                    if(user.getEmail().equals(email)){
+                        User user1 = new User(email,account);
+                        user1.setMonitoredAccount(monitoredAccount1);
+                        mFirebaseUserReference.child(data.getKey()).setValue(user1);
+                        emailFound = "true";
+                    }
+                }
+                if(emailFound.equals("false")){
+                    User user1 = new User(email,account);
+                    user1.setMonitoredAccount(monitoredAccount1);
+                    mFirebaseUserReference.push().setValue(user1);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         DatabaseReference mFirebaseDeleteReference = FirebaseDatabase.getInstance().getReference()
                 .child(MESSAGES_CHILD);
         mFirebaseDeleteReference.addValueEventListener(new ValueEventListener() {
@@ -153,6 +202,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+
 
         createNotificationChannel();
 
@@ -283,6 +334,24 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
+        if(account.equals("monitor")){
+            mTextView.setVisibility(View.GONE);
+            mButton.setVisibility(View.GONE);
+            mViewButton.setVisibility(View.GONE);
+            mSaveButton.setVisibility(View.GONE);
+            mMapsButton.setVisibility(View.GONE);
+
+            mMonitorButton.setVisibility(View.VISIBLE);
+
+            mMonitorButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, MonitorActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
     }
 
