@@ -53,7 +53,8 @@ public class ReminderFragment extends Fragment {
 
     private Reminder mReminder;
     private Reminder mReminder1;
-    private EditText mTitleField;
+    private TextView mTitleField;
+    private TextView mLocationField;
     Button mDateButton;
     Button mTimeButton;
     CheckBox mReadCheckBox;
@@ -62,10 +63,8 @@ public class ReminderFragment extends Fragment {
     private DatabaseReference mFirebaseReference;
     private Date mDate;
 
-    private Button mSelectTimeBtn;
     private Button mSetAlarmBtn;
     private Button mCancelAlarmBtn;
-    private TextView mSelectedTime;
 
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
@@ -105,27 +104,13 @@ public class ReminderFragment extends Fragment {
 
         createNotificationChannel();
 
-        mTitleField = (EditText) v.findViewById(R.id.reminder_title);
+        mTitleField = (TextView) v.findViewById(R.id.reminder_title);
         mTitleField.setText(mReminder1.getmTitle());
 
-        mTitleField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(
-                    CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(
-                    CharSequence s, int start, int before, int count) {
-                mReminder1.setmTitle(s.toString());
-                mFirebaseReference.child("mTitle")
-                        .setValue(mReminder1.getmTitle());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        mLocationField = (TextView) v.findViewById(R.id.reminder_location);
+        if(mReminder1.getLocation() != null){
+            mLocationField.setText(mReminder1.getLocation());
+        }
 
         /*SimpleDateFormat fm1 = new SimpleDateFormat("dd, MMM yyyy HH:mm");
         Date doodle = new Date();
@@ -138,10 +123,12 @@ public class ReminderFragment extends Fragment {
         mDateButton = (Button) v.findViewById(R.id.reminder_date);
         mDate = new Date();
         if(mReminder1.getDate() != null) {
-            mDateButton.setText(mReminder1.getDate());
             SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
+            SimpleDateFormat fm1 = new SimpleDateFormat("dd, MMM yyyy, HH:mm");
             try {
                 mDate = fm.parse(mReminder1.getDate());
+                String dateString = fm1.format(mDate);
+                mDateButton.setText(dateString);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -193,20 +180,13 @@ public class ReminderFragment extends Fragment {
             }
         });
 
-        mSelectTimeBtn = (Button) v.findViewById(R.id.selectTimeBtn);
-        mSelectTimeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("www","mSelectTimeBtn");
-                showTimePicker();
-            }
-        });
 
         mSetAlarmBtn = (Button) v.findViewById(R.id.setAlarmBtn);
         mSetAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("www","mSetAlarmBtn");
+                showTimePicker();
                 setAlarm();
             }
         });
@@ -219,7 +199,6 @@ public class ReminderFragment extends Fragment {
                 cancelAlarm();
             }
         });
-        mSelectedTime = (TextView) v.findViewById(R.id.selectedTime);
 
         return v;
     }
@@ -233,7 +212,6 @@ public class ReminderFragment extends Fragment {
         calendar.set(Calendar.MILLISECOND,0);
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy");
         Log.d("www",dateFormat.format(calendar.getTimeInMillis()));
-        mSelectedTime.setText(dateFormat.format(calendar.getTimeInMillis()));
     }
 
     private void setAlarm() {
@@ -302,14 +280,19 @@ public class ReminderFragment extends Fragment {
         if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
+            SimpleDateFormat fm2 = new SimpleDateFormat("dd, MMM yyyy, HH:mm");
             SimpleDateFormat fm1 = new SimpleDateFormat("HH, mm");
+            SimpleDateFormat fm3 = new SimpleDateFormat("HH:mm");
             String myString = fm.format(date);
             String myString1 = fm1.format(date);
+            String myString2 = fm2.format(date);
+            String myString3 = fm3.format(date);
+
             mDate = date;
             Log.d("www","return "+mDate);
             mReminder1.setDate(myString);
-            mDateButton.setText(myString);
-            mTimeButton.setText(myString1);
+            mDateButton.setText(myString2);
+            mTimeButton.setText(myString3);
             mFirebaseReference.child("date")
                     .setValue(mReminder1.getDate());
         }
