@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -59,7 +60,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.OnConnectionFailedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
@@ -82,15 +83,14 @@ public class MainActivity extends AppCompatActivity
     private ImageView mAddMessageImageView;
     private TextView mTextView;
     private ImageView mButton;
-    private Button mViewButton;
     private Button mSaveButton;
-    private Button mMapsButton;
     private Button mNotifyButton;
     private Button mMonitorButton;
     private SpeechRecognizer speechRecognizer;
     boolean clicked = true;
     private String mResults;
     private String emailId;
+    private BottomNavigationView mBottomNav;
 
     //Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
@@ -116,10 +116,10 @@ public class MainActivity extends AppCompatActivity
 
         mTextView = (TextView) findViewById(R.id.text);
         mButton = (ImageView) findViewById(R.id.button);
-        mViewButton = (Button) findViewById(R.id.view);
         mSaveButton = (Button) findViewById(R.id.save);
-        mMapsButton = (Button) findViewById(R.id.maps);
         mMonitorButton = (Button) findViewById(R.id.monitorButton);
+        mBottomNav = findViewById(R.id.bottom_nav);
+        mBottomNav.setOnNavigationItemSelectedListener(this);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Set default username is anonymous.
@@ -238,23 +238,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mViewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ReminderListActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mMapsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = MapsActivity.newIntent(MainActivity.this, mReminders);
-                startActivity(intent);
-                //Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                //startActivity(intent);
-            }
-        });
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO)!=
                 PackageManager.PERMISSION_GRANTED){
@@ -345,9 +328,9 @@ public class MainActivity extends AppCompatActivity
         if(account.equals("monitor")){
             mTextView.setVisibility(View.GONE);
             mButton.setVisibility(View.GONE);
-            mViewButton.setVisibility(View.GONE);
             mSaveButton.setVisibility(View.GONE);
-            mMapsButton.setVisibility(View.GONE);
+            mBottomNav.setVisibility(View.GONE);
+
 
             mMonitorButton.setVisibility(View.VISIBLE);
 
@@ -488,5 +471,20 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult){
         Log.d(TAG,"onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.view:
+                Intent intent = new Intent(MainActivity.this, ReminderListActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.map:
+                Intent intent1 = MapsActivity.newIntent(MainActivity.this, mReminders);
+                startActivity(intent1);
+                break;
+        }
+        return true;
     }
 }

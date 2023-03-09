@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:layout_gravity="center"
     tools:context=".MainActivity">
 
     <TextView
@@ -16,6 +14,7 @@
         android:hint="Tap to Speak"
         android:textAlignment="center"
         android:inputType="text"
+        android:layout_above="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
@@ -25,32 +24,38 @@
         android:src="@drawable/ic_mics"
         android:backgroundTint="#F9F8FA"
         android:layout_marginTop="15dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         />
     <Button
         android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true"
         android:text="Save" />
-
-    <Button
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View" />
-
-    <Button
-        android:id="@+id/maps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Maps" />
+    
 
     <Button
         android:id="@+id/monitorButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:text="Monitor" />
 
-</LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        app:menu="@menu/menu_bottom_nav"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true" />
+
+
+
+
+</RelativeLayout>
