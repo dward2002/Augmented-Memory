@@ -40,14 +40,20 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import android.location.Geocoder;
 import android.location.Address;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +62,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     private static final String EXTRA_REMINDER_ID = "uk.ac.wlv.augmentedmemory.reminder_id";
     private static final String EXTRA_REMINDER_LIST = "uk.ac.wlv.augmentedmemory.reminder_list";
+    public static final String USERS_CHILD = "users";
 
     private LatLng DUDLEY = new LatLng(0, 0);
     private Marker markerDudley;
@@ -65,6 +72,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
     private GoogleMap map;
     private PlacesClient placesClient;
     private List<Reminder> mReminders;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private String emailId;
+
 
     public static Intent newIntent(Context packageContext, List<Reminder> mReminders){
         Intent intent = new Intent(packageContext, MapsActivity.class);
@@ -83,6 +94,11 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         Places.initialize(getApplicationContext(), "AIzaSyDQ2RgY3VYf3G465erPWcCS_iFmy4wpvlo");
         Bundle args = getIntent().getBundleExtra(EXTRA_REMINDER_ID);
         mReminders = (ArrayList<Reminder>) args.getSerializable(EXTRA_REMINDER_LIST);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        String email = mFirebaseUser.getEmail();
+        int dotIndex = email.indexOf(".");
+        emailId = email.substring(0,dotIndex);
 
         // Create a new PlacesClient instance
         placesClient = Places.createClient(this);
@@ -280,14 +296,26 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
     public void getAddressFromLocation(double lat, double lng){
         Geocoder coder = new Geocoder(MapsActivity.this);
         List<Address> address;
+        String state = "";
 
         try {
             address = coder.getFromLocation(lat, lng, 1);
-            String state = address.get(0).getAddressLine(0);
+            state = address.get(0).getAddressLine(0);
             Log.d("www", "state " + state);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        DatabaseReference mFirebaseUserReference = FirebaseDatabase.getInstance().getReference()
+                .child(USERS_CHILD).child(emailId).child("lastLocation");
+        mFirebaseUserReference.setValue(state);
+
+        DatabaseReference mFirebaseUserReference1 = FirebaseDatabase.getInstance().getReference()
+                .child(USERS_CHILD).child(emailId).child("lastDate");
+        Date date = new Date();
+        SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH:mm");
+        String myString = fm.format(date);
+        Log.d("www",myString);
+        mFirebaseUserReference1.setValue(myString);
     }
 
     public static LatLng getCoordinate(double lat0, double lng0, long dy, long dx) {

@@ -143,8 +143,6 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        DatabaseReference mFirebaseUserReference = FirebaseDatabase.getInstance().getReference()
-                .child(USERS_CHILD);
         email = mFirebaseUser.getEmail();
         int dotIndex = email.indexOf(".");
         emailId = email.substring(0,dotIndex);
@@ -161,6 +159,8 @@ public class MainActivity extends AppCompatActivity
         Log.d("www",email);
 
         emailFound = "false";
+        DatabaseReference mFirebaseUserReference = FirebaseDatabase.getInstance().getReference()
+                .child(USERS_CHILD);
 
         mFirebaseUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -169,16 +169,18 @@ public class MainActivity extends AppCompatActivity
                     User user = data.getValue(User.class);
                     //user.setId(data.getKey());
                     if(user.getEmail().equals(email)){
-                        User user1 = new User(email,account);
-                        user1.setMonitoredAccount(monitoredAccount1);
-                        mFirebaseUserReference.child(data.getKey()).setValue(user1);
+                        //User user1 = new User(email,account);
+                        user.setEmail(email);
+                        user.setAccount(account);
+                        user.setMonitoredAccount(monitoredAccount1);
+                        mFirebaseUserReference.child(emailId).setValue(user);
                         emailFound = "true";
                     }
                 }
                 if(emailFound.equals("false")){
                     User user1 = new User(email,account);
                     user1.setMonitoredAccount(monitoredAccount1);
-                    mFirebaseUserReference.push().setValue(user1);
+                    mFirebaseUserReference.child(emailId).setValue(user1);
                 }
             }
 

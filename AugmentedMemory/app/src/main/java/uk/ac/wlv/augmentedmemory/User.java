@@ -7,8 +7,8 @@ public class User implements Serializable {
     private String email;
     private String account;
     private String monitoredAccount;
-    private String lastLocationLat;
-    private String lastLocationLong;
+    private String lastLocation;
+    private String lastDate;
 
     public User() {
     }
@@ -16,8 +16,7 @@ public class User implements Serializable {
     public User(String email, String account) {
         this.email = email;
         this.account = account;
-        this.lastLocationLat = lastLocationLat;
-        this.lastLocationLong = lastLocationLong;
+
     }
 
     public String getId() {
@@ -52,20 +51,19 @@ public class User implements Serializable {
         this.monitoredAccount = monitoredAccount;
     }
 
-    public String getLastLocationLat() {
-        return lastLocationLat;
+    public String getLastLocation() {
+        return lastLocation;
     }
 
-    public void setLastLocationLat(String lastLocationLat) {
-        this.lastLocationLat = lastLocationLat;
+    public void setLastLocation(String lastLocation) {
+        this.lastLocation = lastLocation;
     }
 
-    public String getLastLocationLong() {
-        return lastLocationLong;
+    public String getLastDate() {
+        return lastDate;
     }
 
-    public void setLastLocationLong(String lastLocationLong) {
-        this.lastLocationLong = lastLocationLong;
+    public void setLastDate(String lastDate) {
+        this.lastDate = lastDate;
     }
-
 }

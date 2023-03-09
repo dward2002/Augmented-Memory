@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,18 +23,24 @@ import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MonitorActivity extends AppCompatActivity {
 
     public static final String MESSAGES_CHILD = "messages";
+    public static final String USERS_CHILD = "users";
 
     private String mUsername;
 
     private TextView mTitleTextView;
+    private TextView mLastLocationTextView;
+    private TextView mLastDateTextView;
 
     private DatabaseReference mFirebaseDatabaseReference;
+    private DatabaseReference mFirebaseUserReference;
     private FirebaseRecyclerAdapter<Reminder, MessageViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
     private RecyclerView mReminderRecyclerView;
@@ -51,9 +58,34 @@ public class MonitorActivity extends AppCompatActivity {
         mTitleTextView = (TextView) findViewById(R.id.Title);
         mTitleTextView.setText(mUsername);
 
+        mLastLocationTextView = (TextView) findViewById(R.id.LastLocation);
+        mLastDateTextView = (TextView) findViewById(R.id.LastDate);
+
         int dotIndex = mUsername.indexOf(".");
         emailId = mUsername.substring(0,dotIndex);
         Log.d("www", emailId);
+
+        mFirebaseUserReference = FirebaseDatabase.getInstance().getReference()
+                .child(USERS_CHILD).child(emailId);
+
+        mFirebaseUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    if(user.getLastLocation() != null){
+                        mLastLocationTextView.setText(user.getLastLocation());
+                    }
+                    if(user.getLastDate() != null){
+                        mLastDateTextView.setText(user.getLastDate());
+                    }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         mProgressBar = (ProgressBar) findViewById(R.id.progreesBar1);
         mReminderRecyclerView = (RecyclerView) findViewById(R.id.reminderRecyclerView1);
