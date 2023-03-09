@@ -194,6 +194,9 @@ public class NewReminderProcessor {
                 //not pm but doesnt have : minutes (example 7)
                 else{
                     //gets the first 2 digits so '7 ' or '11' for example
+                    if(time.length() == 1){
+                        time += " ";
+                    }
                     time = time.substring(0, 2);
                     //gets the second character
                     String secondChar = String.valueOf(time.charAt(1));
