@@ -31,6 +31,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,6 +70,9 @@ public class ReminderFragment extends Fragment {
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     private Calendar calendar;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private String emailId;
 
     public static ReminderFragment newInstance(String reminderId, Reminder rem){
         Bundle args = new Bundle();
@@ -83,9 +88,14 @@ public class ReminderFragment extends Fragment {
         super.onCreate(savedInstanceState);
         reminderId = (String) getArguments().getSerializable(ARG_REMINDER_ID);
         mReminder1 = (Reminder) getArguments().getSerializable(ARG_REMINDER);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        String email = mFirebaseUser.getEmail();
+        int dotIndex = email.indexOf(".");
+        emailId = email.substring(0,dotIndex);
 
         mFirebaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("messages").child(reminderId);
+                .child("messages").child(emailId).child(reminderId);
 
     }
 

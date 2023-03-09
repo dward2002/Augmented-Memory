@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,6 +39,10 @@ public class MonitorActivity extends AppCompatActivity {
     private RecyclerView mReminderRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
 
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private String emailId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,10 @@ public class MonitorActivity extends AppCompatActivity {
         mUsername = getIntent().getStringExtra("username");
         mTitleTextView = (TextView) findViewById(R.id.Title);
         mTitleTextView.setText(mUsername);
+
+        int dotIndex = mUsername.indexOf(".");
+        emailId = mUsername.substring(0,dotIndex);
+        Log.d("www", emailId);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progreesBar1);
         mReminderRecyclerView = (RecyclerView) findViewById(R.id.reminderRecyclerView1);
@@ -94,7 +104,7 @@ public class MonitorActivity extends AppCompatActivity {
                 return Reminder;
             }
         };
-        DatabaseReference remindersRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
+        DatabaseReference remindersRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(emailId);
         FirebaseRecyclerOptions<Reminder> options =
                 new FirebaseRecyclerOptions.Builder<Reminder>().setQuery(remindersRef, parser).build();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Reminder, MessageViewHolder>(options) {
@@ -111,12 +121,6 @@ public class MonitorActivity extends AppCompatActivity {
                 if (Reminder.getmTitle() != null) {
                     viewHolder.reminderTextView.setText(Reminder.getmTitle());
                     viewHolder.reminderTextView.setVisibility(TextView.VISIBLE);
-                }
-                if(Reminder.getEmail() != null && Reminder.getEmail().equals(mUsername)){
-                    viewHolder.reminderTextView.setVisibility(TextView.VISIBLE);
-                }
-                else{
-                    viewHolder.reminderTextView.setVisibility(TextView.GONE);
                 }
             }
         };

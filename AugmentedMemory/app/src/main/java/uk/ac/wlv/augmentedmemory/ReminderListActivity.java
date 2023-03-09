@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +39,9 @@ public class ReminderListActivity extends AppCompatActivity {
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private List<Reminder> mReminders = new ArrayList<>();
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private String emailId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +52,14 @@ public class ReminderListActivity extends AppCompatActivity {
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView1);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        String email = mFirebaseUser.getEmail();
+        int dotIndex = email.indexOf(".");
+        emailId = email.substring(0,dotIndex);
         loadFirebaseMessages();
         DatabaseReference mFirebaseDeleteReference = FirebaseDatabase.getInstance().getReference()
-                .child(MESSAGES_CHILD);
+                .child(MESSAGES_CHILD).child(emailId);
         mFirebaseDeleteReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -110,7 +120,7 @@ public class ReminderListActivity extends AppCompatActivity {
                 return Reminder;
             }
         };
-        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
+        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(emailId);
         FirebaseRecyclerOptions<Reminder> options =
                 new FirebaseRecyclerOptions.Builder<Reminder>().setQuery(messagesRef, parser).build();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Reminder, MessageViewHolder>(options) {

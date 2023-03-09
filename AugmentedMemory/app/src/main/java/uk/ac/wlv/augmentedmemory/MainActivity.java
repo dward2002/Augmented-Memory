@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity
     private SpeechRecognizer speechRecognizer;
     boolean clicked = true;
     private String mResults;
+    private String emailId;
 
     //Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
@@ -145,6 +146,8 @@ public class MainActivity extends AppCompatActivity
         DatabaseReference mFirebaseUserReference = FirebaseDatabase.getInstance().getReference()
                 .child(USERS_CHILD);
         email = mFirebaseUser.getEmail();
+        int dotIndex = email.indexOf(".");
+        emailId = email.substring(0,dotIndex);
         String monitoredAccount = null;
         if (email.equals("doogieboy111@gmail.com")){
             account = "user";
@@ -186,7 +189,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         DatabaseReference mFirebaseDeleteReference = FirebaseDatabase.getInstance().getReference()
-                .child(MESSAGES_CHILD);
+                .child(MESSAGES_CHILD).child(emailId);
         mFirebaseDeleteReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -226,7 +229,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 mReminder1 = new Reminder(mResults,
                         mUserName, dateTime,requestCode, location, email);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
+                //mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(emailId).push().setValue(mReminder1);
                 showTimePicker(date);
                 setAlarm();
             }
