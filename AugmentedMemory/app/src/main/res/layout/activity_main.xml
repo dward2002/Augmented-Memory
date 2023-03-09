@@ -13,11 +13,11 @@
         android:background="@null"
         android:hint="Tap to Speak"
         android:textAlignment="center"
-        android:inputType="text"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_above="@+id/button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/button"
