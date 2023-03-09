@@ -63,6 +63,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
     private static final String EXTRA_REMINDER_ID = "uk.ac.wlv.augmentedmemory.reminder_id";
     private static final String EXTRA_REMINDER_LIST = "uk.ac.wlv.augmentedmemory.reminder_list";
     public static final String USERS_CHILD = "users";
+    public static final String MESSAGES_CHILD = "messages";
 
     private LatLng DUDLEY = new LatLng(0, 0);
     private Marker markerDudley;
@@ -182,7 +183,14 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         //autocompleteTest("zoo");
         //autocompleteTest("Mcdonald's");
         for(Reminder rem : mReminders){
-            if (rem.getLocation() != null){
+            //if already has long and lat
+            if(rem.getLongitude() != null && rem.getLatitude() != null){
+                double lon = Double.parseDouble(rem.getLongitude());
+                double lat = Double.parseDouble(rem.getLatitude());
+                markReminder(lon,lat,rem);
+            }
+            //if it doesnt then get the long and lat
+            else if (rem.getLocation() != null){
                 autocompleteTest(rem.getLocation(), rem);
             }
         }
@@ -286,11 +294,30 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
                     .title(rem.getmTitle())
                     .snippet(rem.getLocation()));
             markerExample.setTag(0);
+            rem.setLongitude(String.valueOf(location.getLongitude()));
+            rem.setLatitude(String.valueOf(location.getLatitude()));
+
+            DatabaseReference mFirebaseReference = FirebaseDatabase.getInstance().getReference()
+                    .child(MESSAGES_CHILD).child(emailId).child(rem.getId());
+
+            mFirebaseReference.setValue(rem);
+
+
 
         } catch (IOException ex) {
 
             ex.printStackTrace();
         }
+    }
+
+    //used if reminder already has long and lat coordinates
+    public void markReminder(double lon, double lat, Reminder rem){
+        LatLng ReminderLocation = new LatLng(lat, lon);
+        Marker markerReminder = map.addMarker(new MarkerOptions()
+                .position(ReminderLocation)
+                .title(rem.getmTitle())
+                .snippet(rem.getLocation()));
+        markerExample.setTag(0);
     }
 
     public void getAddressFromLocation(double lat, double lng){

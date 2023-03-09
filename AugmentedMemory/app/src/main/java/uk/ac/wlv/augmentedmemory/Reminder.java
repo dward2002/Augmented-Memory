@@ -13,6 +13,8 @@ class Reminder implements Serializable {
     private int requestCode;
     private String Location;
     private String email;
+    private String longitude;
+    private String latitude;
 
     public Reminder() {
     }
@@ -68,5 +70,21 @@ class Reminder implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }
