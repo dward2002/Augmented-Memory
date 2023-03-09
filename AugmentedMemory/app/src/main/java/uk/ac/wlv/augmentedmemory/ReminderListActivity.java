@@ -175,7 +175,7 @@ public class ReminderListActivity extends AppCompatActivity implements BottomNav
                         Reminder.setRead(isChecked);
                         //Log.d("www",Reminder.getmTitle());
                         FirebaseDatabase.getInstance().getReference()
-                                .child(MESSAGES_CHILD).child(Reminder.getId()).child("read")
+                                .child(MESSAGES_CHILD).child(emailId).child(Reminder.getId()).child("read")
                                 .setValue(Reminder.isRead());
                     }
                 });
