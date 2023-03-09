@@ -230,8 +230,7 @@ public class MainActivity extends AppCompatActivity
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mReminder1 = new Reminder(mResults,
-                        mUserName, dateTime,requestCode, location, email);
+                mReminder1 = new Reminder(mResults, dateTime,requestCode, location, email);
                 //mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(emailId).push().setValue(mReminder1);
                 showTimePicker(date);

@@ -121,14 +121,12 @@ public class ReminderListActivity extends AppCompatActivity implements BottomNav
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder{
         TextView messageTextView;
-        TextView messengerTextView;
         CheckBox readCheckbox;
         //Button messengerDeleteButton;
 
         public MessageViewHolder(View v){
             super(v);
             messageTextView = (TextView) itemView.findViewById(R.id.list_item_message_title_text_view);
-            messengerTextView = (TextView) itemView.findViewById(R.id.list_item_message_date_text_view);
             readCheckbox = (CheckBox) itemView.findViewById(R.id.list_item_message_read_check_box);
         }
     }
@@ -181,7 +179,6 @@ public class ReminderListActivity extends AppCompatActivity implements BottomNav
                                 .setValue(Reminder.isRead());
                     }
                 });
-                viewHolder.messengerTextView.setText(Reminder.getName());
                 viewHolder.readCheckbox.setChecked(Reminder.isRead());
             }
         };

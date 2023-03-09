@@ -19,9 +19,8 @@ class Reminder implements Serializable {
     public Reminder() {
     }
 
-    public Reminder(String mTitle, String name, String date, int requestCode, String Location,String email) {
+    public Reminder(String mTitle, String date, int requestCode, String Location,String email) {
         this.mTitle = mTitle;
-        this.name = name;
         this.date = date;
         this.requestCode = requestCode;
         this.Location = Location;
