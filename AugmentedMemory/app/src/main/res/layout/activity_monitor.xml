@@ -24,6 +24,8 @@
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="20sp"
             android:text="Username" />
 
 
@@ -32,14 +34,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Monitor page"
-            android:paddingBottom="15dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="17sp">
         </TextView>
 
         <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Last Location" />
+            android:text="Last Location"
+            android:layout_marginTop="5dp"
+            android:textSize="20sp"/>
 
 
         <TextView
@@ -47,28 +55,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No location recorded"
-            android:paddingBottom="15dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="17sp">
         </TextView>
 
         <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date and time of Last Location" />
+            android:text="Date of Last Location"
+            android:layout_marginTop="5dp"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/LastDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No date recorded"
-            android:paddingBottom="15dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="17sp">
         </TextView>
 
         <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="List of Reminders" />
+            android:text="List of Reminders"
+            android:layout_marginTop="5dp"
+            android:textSize="20sp"/>
 
     </LinearLayout>
 
