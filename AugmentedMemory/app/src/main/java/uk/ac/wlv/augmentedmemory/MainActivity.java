@@ -218,23 +218,28 @@ public class MainActivity extends AppCompatActivity
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewReminderProcessor process;
-                process = new NewReminderProcessor(mResults);
-                String dateTime = process.dateTimeprocess();
-                String location = process.getLocationProcess();
-                int requestCode = requestCheck();
-                Date date = new Date();
-                SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
-                try {
-                    date = fm.parse(dateTime);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if(mResults == null){
+                    Toast.makeText(MainActivity.this, "Click the red button to create a reminder", Toast.LENGTH_LONG).show();
                 }
-                mReminder1 = new Reminder(mResults, dateTime,requestCode, location, email);
-                //mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(emailId).push().setValue(mReminder1);
-                showTimePicker(date);
-                setAlarm();
+                else{
+                    NewReminderProcessor process;
+                    process = new NewReminderProcessor(mResults);
+                    String dateTime = process.dateTimeprocess();
+                    String location = process.getLocationProcess();
+                    int requestCode = requestCheck();
+                    Date date = new Date();
+                    SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
+                    try {
+                        date = fm.parse(dateTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    mReminder1 = new Reminder(mResults, dateTime,requestCode, location, email);
+                    //mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
+                    mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(emailId).push().setValue(mReminder1);
+                    showTimePicker(date);
+                    setAlarm();
+                }
             }
         });
 
