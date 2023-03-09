@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReminderListActivity extends AppCompatActivity {
+public class ReminderListActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Reminder, MessageViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
@@ -42,6 +44,7 @@ public class ReminderListActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private String emailId;
+    private BottomNavigationView mBottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,10 @@ public class ReminderListActivity extends AppCompatActivity {
         String email = mFirebaseUser.getEmail();
         int dotIndex = email.indexOf(".");
         emailId = email.substring(0,dotIndex);
+        mBottomNav = findViewById(R.id.bottom_nav);
+        mBottomNav.setOnNavigationItemSelectedListener(this);
+        mBottomNav.setSelectedItemId(R.id.view);
+
         loadFirebaseMessages();
         DatabaseReference mFirebaseDeleteReference = FirebaseDatabase.getInstance().getReference()
                 .child(MESSAGES_CHILD).child(emailId);
@@ -90,6 +97,25 @@ public class ReminderListActivity extends AppCompatActivity {
         super.onResume();
         mFirebaseAdapter.notifyDataSetChanged();
         mFirebaseAdapter.startListening();
+        mBottomNav.setSelectedItemId(R.id.view);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu:
+                startActivity(new Intent(ReminderListActivity.this, MainActivity.class));
+                finish();
+                break;
+            case R.id.view:
+                break;
+            case R.id.map:
+                Intent intent1 = MapsActivity.newIntent(ReminderListActivity.this, mReminders);
+                startActivity(intent1);
+                break;
+        }
+
+        return true;
     }
 
 

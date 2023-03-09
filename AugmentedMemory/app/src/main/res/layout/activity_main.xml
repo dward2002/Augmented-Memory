@@ -36,7 +36,7 @@
         android:layout_below="@+id/button"
         android:layout_centerHorizontal="true"
         android:text="Save" />
-    
+
 
     <Button
         android:id="@+id/monitorButton"

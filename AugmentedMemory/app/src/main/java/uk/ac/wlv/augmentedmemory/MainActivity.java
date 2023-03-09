@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity
         mMonitorButton = (Button) findViewById(R.id.monitorButton);
         mBottomNav = findViewById(R.id.bottom_nav);
         mBottomNav.setOnNavigationItemSelectedListener(this);
+        mBottomNav.setSelectedItemId(R.id.menu);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Set default username is anonymous.
@@ -438,6 +439,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
+        mBottomNav.setSelectedItemId(R.id.menu);
     }
 
     @Override
@@ -476,9 +478,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu:
+                break;
             case R.id.view:
                 Intent intent = new Intent(MainActivity.this, ReminderListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.map:
                 Intent intent1 = MapsActivity.newIntent(MainActivity.this, mReminders);
