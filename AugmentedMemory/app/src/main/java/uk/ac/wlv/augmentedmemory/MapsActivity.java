@@ -117,12 +117,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         markerDudley.setTag(0);
 
-        LatLng example = new LatLng(52.521584, -2.110577);
-        markerExample = map.addMarker(new MarkerOptions()
-                .position(example)
-                .title("Balvenie way")
-                .snippet("This is an example reminder location"));
-        markerExample.setTag(0);
 
         //searchLocation();
         //getLocationFromAddress();
@@ -137,19 +131,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-
-        // Retrieve the data from the marker.
-        Integer clickCount = (Integer) marker.getTag();
-
-        // Check if a click count was set, then display the click count.
-        if (clickCount != null) {
-            clickCount = clickCount + 1;
-            marker.setTag(clickCount);
-            Toast.makeText(this,
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show();
-        }
         return false;
     }
 
@@ -293,7 +274,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
                     .position(ReminderLocation)
                     .title(rem.getmTitle())
                     .snippet(rem.getLocation()));
-            markerExample.setTag(0);
+            markerReminder.setTag(0);
             rem.setLongitude(String.valueOf(location.getLongitude()));
             rem.setLatitude(String.valueOf(location.getLatitude()));
 
@@ -317,7 +298,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
                 .position(ReminderLocation)
                 .title(rem.getmTitle())
                 .snippet(rem.getLocation()));
-        markerExample.setTag(0);
+        markerReminder.setTag(0);
     }
 
     public void getAddressFromLocation(double lat, double lng){
