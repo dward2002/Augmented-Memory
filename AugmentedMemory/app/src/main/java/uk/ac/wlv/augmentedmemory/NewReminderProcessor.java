@@ -243,24 +243,32 @@ public class NewReminderProcessor {
     }
 
     private String locationProcess(){
-        Matcher m = Pattern.compile("at location.*$").matcher(UnprocessedReminder);//finds 'at location' and words after
+        //Matcher m = Pattern.compile("at location.*$").matcher(UnprocessedReminder);//finds 'at location' and words after
         //List<String> words = new ArrayList<>();
         String location = "";
-
-        if (m.find()) {
-            m.group(0);
-            String sentence = m.group(0);
-            String[] words = sentence.split(" ");
-            for(int i = 2; i < words.length; i++){
-                if(i == 2){
+        int pos = UnprocessedReminder.indexOf("at location");
+        //does it include 'at location'
+        if (pos != -1) {
+        //if (m.find()) {
+            //m.group(0);
+            //String sentence = m.group(0);
+            String sentence = UnprocessedReminder.substring(pos + 12);
+            int atPos = sentence.indexOf("at");
+            Log.d("www", "222 "+sentence);
+            if(atPos != -1){
+                sentence = sentence.substring(0,atPos);
+            }
+            Log.d("www", "222 "+sentence);
+            location = sentence;
+            /*String[] words = sentence.split(" ");
+            for(int i = 0; i < words.length; i++){
+                if(i == 0){
                     location = location + words[i];
                 }
                 else{
                     location = location+ " " + words[i];
                 }
-
-            }
-
+            }*/
         }
         if(location == ""){
             return null;
