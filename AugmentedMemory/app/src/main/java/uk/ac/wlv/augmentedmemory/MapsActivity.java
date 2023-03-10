@@ -111,9 +111,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         getLocation();
         markerDudley = map.addMarker(new MarkerOptions()
                 .position(DUDLEY)
-                .title("Beaumaris Close")
+                .title("Current Location")
                 .visible(false)
-                .snippet("This is an example of your current location")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         markerDudley.setTag(0);
 
