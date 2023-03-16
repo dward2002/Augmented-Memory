@@ -98,7 +98,7 @@ public class NewReminderProcessor {
 
         int count = 0;
         for(String month: monthNames){
-            if (UnprocessedReminder.contains(month) || UnprocessedReminder.contains(monthNames1[count])){
+            if (UnprocessedReminder.contains(month) || UnprocessedReminder.contains(monthNames1[count]) || UnprocessedReminder.contains(monthNames1[count].toLowerCase())){
                 this.month = monthNames1[count].toUpperCase();
             }
             count++;
@@ -115,7 +115,7 @@ public class NewReminderProcessor {
     }
 
     private void timeProcess(){
-        int pos = UnprocessedReminder.indexOf("at");
+        int pos = UnprocessedReminder.indexOf("at ");
         //does it include 'at'
         if (pos != -1) {
             //gets everything after the 'at '
@@ -248,7 +248,7 @@ public class NewReminderProcessor {
         //Matcher m = Pattern.compile("at location.*$").matcher(UnprocessedReminder);//finds 'at location' and words after
         //List<String> words = new ArrayList<>();
         String location = "";
-        String[] commands = {"at location","go to"};
+        String[] commands = {"at location","go to", "at the","from"};
         int pos = -1;
         int length = 0;
         for(String command : commands){
@@ -267,7 +267,7 @@ public class NewReminderProcessor {
             Log.d("www",UnprocessedReminder);
             String sentence = UnprocessedReminder.substring(pos + length);
             String sentence1 = UnprocessedReminder.substring(pos + length);
-            String[] otherCommands = {"at","to"};
+            String[] otherCommands = {"at "," to ", " on ", " for ", " and "};
             int atPos = -1;
             for(String command : otherCommands){
                 int pos2 = sentence.indexOf(command);
@@ -286,7 +286,13 @@ public class NewReminderProcessor {
             Log.d("www","sentence = "+sentence1);
             //Log.d("www", sentence);
             location = sentence;
-            UnprocessedReminder = UnprocessedReminder.substring(0, pos) + sentence1.substring(atPos);
+            if(pos < atPos){
+                UnprocessedReminder = UnprocessedReminder.substring(0, pos) + sentence1.substring(atPos);
+            }
+            else{
+                UnprocessedReminder = UnprocessedReminder.substring(0, pos);
+            }
+
             Log.d("www", "unprocess "+UnprocessedReminder);
             /*String[] words = sentence.split(" ");
             for(int i = 0; i < words.length; i++){
