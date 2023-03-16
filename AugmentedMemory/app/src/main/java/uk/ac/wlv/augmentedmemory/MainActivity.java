@@ -224,8 +224,13 @@ public class MainActivity extends AppCompatActivity
                 else{
                     NewReminderProcessor process;
                     process = new NewReminderProcessor(mResults);
-                    String dateTime = process.dateTimeprocess();
+                    //String prac = "walk the dog at 16:02 at location gornal tyres";
+                    //String prac1 = "walk the dog at location gornal tyres at 16:02";
+                    //String prac2 = "at location gornal tyres at 16:02 walk the dog ";
+                    //String prac3 = "go to gornal tyres at 16:02 to walk the dog ";
+                    //process = new NewReminderProcessor(prac2);
                     String location = process.getLocationProcess();
+                    String dateTime = process.dateTimeprocess();
                     int requestCode = requestCheck();
                     Date date = new Date();
                     SimpleDateFormat fm = new SimpleDateFormat("dd, MMM yyyy, HH mm");
@@ -235,7 +240,6 @@ public class MainActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                     mReminder1 = new Reminder(mResults, dateTime,requestCode, location, email);
-                    //mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(mReminder1);
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(emailId).push().setValue(mReminder1);
                     showTimePicker(date);
                     setAlarm();

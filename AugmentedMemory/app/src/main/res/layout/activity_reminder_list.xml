@@ -16,17 +16,8 @@
         android:id="@+id/messageRecyclerView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/linearLayout1"/>
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
+        android:layout_above="@+id/bottom_nav"/>
 
-    </LinearLayout>
     <ProgressBar
         android:id="@+id/progreesBar1"
         style="?android:attr/progressBarStyleLarge"
