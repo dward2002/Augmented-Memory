@@ -92,7 +92,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.maps);
         mapFragment.getMapAsync(this);
-        Places.initialize(getApplicationContext(), "AIzaSyDQ2RgY3VYf3G465erPWcCS_iFmy4wpvlo");
+        Places.initialize(getApplicationContext(), "PUT API KEY HERE");
         Bundle args = getIntent().getBundleExtra(EXTRA_REMINDER_ID);
         mReminders = (ArrayList<Reminder>) args.getSerializable(EXTRA_REMINDER_LIST);
         mFirebaseAuth = FirebaseAuth.getInstance();
